@@ -1,19 +1,24 @@
-module Jogo.Navio (Navio(..), naviosDefault, OrientacaoNavio(..)) where
+module Jogo.Navio (Navio(..), naviosDefault, Orientacao(..)) where
+import Data.IntMap (delete)
 
 data Navio = Navio {
     tipo :: String,
     tamanho :: Int
- }
+ } deriving (Eq, Show)
 
 naviosDefault :: [Navio]
 naviosDefault = 
-    [ Navio "portaAvioes" 5,
-      Navio "couraçado" 4,
-      Navio "cruzador1" 3,
-      Navio "cruzador2" 3,
-      Navio "submarino1" 2,
-      Navio "submarino2" 2
+    [ Navio "Porta Aviões" 5,
+      Navio "Couraçado" 4,
+      Navio "Cruzador 1" 3,
+      Navio "Cruzador 2" 3,
+      Navio "Submarino 1" 2,
+      Navio "Submarino 2" 2
     ]
 
-data OrientacaoNavio = H | V deriving (Eq, Show)
+data Orientacao = H | V deriving (Eq, Show)
+
+naviosDisponiveis :: [Navio] -> Int -> String
+naviosDisponiveis [] _ = ""
+naviosDisponiveis (n:ns) i = tipo n ++ " (" ++ show i ++ ") " ++ naviosDisponiveis ns (i+1) 
 

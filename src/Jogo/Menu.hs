@@ -1,13 +1,12 @@
 module Jogo.Menu where
 import GHC.Exception (getCallStack)
-import Jogo.Navio (naviosDefault)
+import Jogo.Navio
 
 main :: IO()
 main = do
     menuPrincipal
 
 --A cara por assim dizer do menu do jogo no momento, com o passar do desenvolvimento a gante tenta deixar ela um pouco mais agradável
---claro a função jogar ainda não foi implementadaa mas ao ser é só substituir o "COMEÇAR JOGO" com a chamada da função
 menuPrincipal :: IO()
 menuPrincipal = do
     putStrLn "\nBEM VINDO!"
@@ -31,22 +30,62 @@ tutorial = do
     putStrLn "O jogo começa com o jogador sendo encarregado de escalar os seus navios em alguma posição válida dentro do seu tabuleiro de 81 espaços e o seu objetivo é simples, destruir todos os navios do seu oponente antes que ele destrua os seus"
     menuPrincipal
 
---Precisa colocar o desvio que vai perguntar ao jogador qual a posição que ele vai querer colocar o navio e a orientação dele apos isso
 startGame :: IO()
 startGame = do
+    putStrLn "Selecione a ordem que deseja colocar seus barcos no tabuleiro, eles estão em ordem decrescente de tamanho: " 
+    setNavios
+    --Depois de o jogador colocar os seus navios a CPU coloca os navios dela e o combate por fim se inicia
+   
+setNavios :: IO()
+setNavios =
     putStrLn "Selecione a ordem que deseja colocar seus barcos no tabuleiro, eles estão em ordem decrescente de tamanho: "
-    putStrLn "Porta-Aviões (1), Couraçado (2), Cruzador 1 (3), Cruzador 2 (4), Submarino 1 (5), Submarino 2 (6)"
-    putStr ">"
+    if (length naviosDefault != 0)
+        then do putStr (naviosDisponiveis 1 naviosDefault)
+                
+                putStr ">"
+        
+                option <- readLn
 
-    option <- getLine
+                putStr "Em qual coordenada deseja posicionar o navio?"
 
-    case option of
-        "1" -> head naviosDefault
-        "2" -> naviosDefault !! 1
-        "3" -> naviosDefault !! 2
-        "4" -> naviosDefault !! 3
-        "5" -> naviosDefault !! 4
-        "6" -> naviosDefault !! 5
-        _ -> putStrLn "OPÇÃO INVÁLIDA"
+                putStr "Linha: "
+
+                x <- read
+
+                putStr "Coluna: "
+
+                y <- read
+
+                --Verificar se a coordenada desejada é válida e depois criar o "objeto" coordenadaDesejada do tipo Coordenada
+
+                putStr "Deseja posicionar o navio na vertical (V) ou na horizontal (H)?"
+
+                sentido <- getLine
+
+                --Verificar se a posição é valida 
+                --Chamar desenharNavio com as informações para propriamente "desenhar" o navio no Tabuleiro
+                --Repetir esse processo atraves de chamadas recursivas até naviosDefault estar vazio
+
+
+--A função de posicionar propriamente os navios no tabuleiro com base nos dados obtidos em setNavios
+desenharNavio :: Tabuleiro
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
 
 
