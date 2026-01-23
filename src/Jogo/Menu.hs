@@ -46,23 +46,14 @@ setNavios =
         
                 option <- readLn
 
-                putStr "Em qual coordenada deseja posicionar o navio?"
+                putStr "Em qual coordenada deseja posicionar o navio? (EX: 2 3)"
 
-                putStr "Linha: "
-
-                x <- read
-
-                putStr "Coluna: "
-
-                y <- read
-
-                --Verificar se a coordenada desejada é válida e depois criar o "objeto" coordenadaDesejada do tipo Coordenada
+                coordenadaDesejada <- lerCoordenada
 
                 putStr "Deseja posicionar o navio na vertical (V) ou na horizontal (H)?"
+                
+                orient <- lerOrientacao
 
-                sentido <- getLine
-
-                --Verificar se a posição é valida 
                 --Chamar desenharNavio com as informações para propriamente "desenhar" o navio no Tabuleiro
                 --Repetir esse processo atraves de chamadas recursivas até naviosDefault estar vazio
 
@@ -70,6 +61,40 @@ setNavios =
 --A função de posicionar propriamente os navios no tabuleiro com base nos dados obtidos em setNavios
 desenharNavio :: Tabuleiro
 
+--Precisa checar para ver se esta funcionando corretamente
+lerCoordenada :: IO Coordenada
+lerCoordenada = do
+    putStr ">"
+   -- hFlush stdout
+    coord <- getLine
+    case words coord of
+      [sx, sy] -> case (reads sx, reads sy) of
+        ([(x,"")], [(y,"")]) ->
+          if coordenadaValida (x,y)
+          then return (x, y)
+          else do
+            putStrLn "Posição inválida. Tente novamente."
+            lerCoordenada
+        _ -> do
+          putStrLn "Entrada inválida. Use dois números separados por espaço."
+          lerCoordenada
+      _ -> do
+        putStrLn "Formato inválido. Tente novamente."
+        lerCoordenada
+
+
+--Precisa checar para ver se esse negócio funciona, isso tá mais para uma ideia do que uma implementação por si só
+lerOrientacao :: IO Navio Coordenada Orientacao
+lerOrientacao nav coord = do
+    putStr ">"
+    -- hFlush stdout
+    orient <- getLine
+    case orient of
+        "H" -> verificarOrientValida nav coord H
+        "V" -> verificarOrientValida nav coord V
+        _ -> do
+            putStrLn "Orientação invãlida. Tente novamente"
+            lerOrientacao
 
 
 
