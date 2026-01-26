@@ -1,6 +1,6 @@
 import System.Console.Terminfo (clearScreen)
 -- Navio - N
--- Água  - .
+-- Água  - ~
 -- Hit   - X
 -- Miss  - O
 
@@ -36,33 +36,43 @@ iniciarJogo = do
     let tabuleiroUsr = criarTabuleiro
     let tabuleiroCpu = criarTabuleiro
     putStrLn (showTabuleiro tabuleiroUsr)
-    
+
     tabuleiroUsr <- putNavio tabuleiroUsr (head naviosDefault)
     putStrLn (showTabuleiro tabuleiroUsr)
-    
+
     tabuleiroUsr <- putNavio tabuleiroUsr (naviosDefault !! 1)
     putStrLn (showTabuleiro tabuleiroUsr)
-    
+
     tabuleiroUsr <- putNavio tabuleiroUsr (naviosDefault !! 2)
     putStrLn (showTabuleiro tabuleiroUsr)
-    
+
     tabuleiroUsr <- putNavio tabuleiroUsr (naviosDefault !! 3)
     putStrLn (showTabuleiro tabuleiroUsr)
-    
+
     tabuleiroUsr <- putNavio tabuleiroUsr (naviosDefault !! 4)
     putStrLn (showTabuleiro tabuleiroUsr)
-    
+
     tabuleiroUsr <- putNavio tabuleiroUsr (naviosDefault !! 5)
     putStrLn (showTabuleiro tabuleiroUsr)
-    
+
     -- Configuração automática do tabuleiro da CPU (fixo por simplicidade)
     tabuleiroCpu <- putNavioManual tabuleiroCpu (head naviosDefault) (0,0) H
     tabuleiroCpu <- putNavioManual tabuleiroCpu (naviosDefault !! 1) (2,2) V
     tabuleiroCpu <- putNavioManual tabuleiroCpu (naviosDefault !! 2) (5,5) H
     tabuleiroCpu <- putNavioManual tabuleiroCpu (naviosDefault !! 3) (7,7) V
-    
-    putStrLn "Lógica do jogo ainda em desenvolvimento."
 
+    iniciarCombate tabuleiroUsr tabuleiroCpu
+
+  
+    putStrLn (showTabuleiro tabuleiroCpu)
+
+iniciarCombate :: Tabuleiro -> Tabuleiro -> IO()
+iniciarCombate boardJog boardCPU = do
+  putStrLn "Tabuleiro do oponente"
+  putStrLn (encobrirTabuleiro boardCPU)
+  putStrLn "Em qual coordenada deseja atirar?"
+  tiro <- getCoordenada
+  putStrLn "Ainda em desenvolvimento"
 
 atualizaIndice :: Tabuleiro -> Coordenada -> Int -> Tabuleiro
 atualizaIndice tabuleiro (x,y) val =
@@ -76,7 +86,7 @@ putNavio tabuleiro navio = do
     coord <- getCoordenada
     orient <- getOrient
 
-    if checkOrientValida navio coord orient && checkOverlap tabuleiro navio coord orient
+    if checkOverlap tabuleiro navio coord orient
       then do
         putStrLn "Navio posicionado com sucesso!"
         return (posicionarNavio tabuleiro navio coord orient)
@@ -86,7 +96,7 @@ putNavio tabuleiro navio = do
 
 putNavioManual :: Tabuleiro -> Navio -> Coordenada -> Orientacao -> IO Tabuleiro
 putNavioManual tabuleiro navio coord orient =
-    if checkOrientValida navio coord orient && checkOverlap tabuleiro navio coord orient
+    if checkOverlap tabuleiro navio coord orient
       then do
         return (posicionarNavio tabuleiro navio coord orient)
       else do
@@ -96,8 +106,8 @@ posicionarNavio :: Tabuleiro -> Navio -> Coordenada -> Orientacao -> Tabuleiro
 posicionarNavio tabuleiro navio (x,y) orient =
   let tam = tamanho navio
       coords = case orient of
-                 H -> [(x + i, y) | i <- [0..tam - 1]]
-                 V -> [(x, y + i) | i <- [0..tam - 1]]
+                 V -> [(x + i, y) | i <- [0..tam - 1]]
+                 H -> [(x, y + i) | i <- [0..tam - 1]]
   in addSegmentoNavio tabuleiro coords
 
 addSegmentoNavio :: Tabuleiro -> [Coordenada] -> Tabuleiro
@@ -121,7 +131,7 @@ getCoordenada = do
         getCoordenada
       else
       return (x,y)
-  
+
 getOrient :: IO Orientacao
 getOrient = do
   putStrLn "Orientação (H para horizontal, V para vertical): "
@@ -138,12 +148,13 @@ getOrient = do
 
 
 
+--Não parece estar funcionando 
 checkOverlap :: Tabuleiro -> Navio -> Coordenada -> Orientacao -> Bool
 checkOverlap tabuleiro navio (x,y) orient =
   let tam = tamanho navio
       coords = case orient of
-                 H -> [(x + i, y) | i <- [0..tam - 1]]
-                 V -> [(x, y + i) | i <- [0..tam - 1]]
+                 V -> [(x + i, y) | i <- [0..tam - 1]]
+                 H -> [(x, y + i) | i <- [0..tam - 1]]
   in all (\(cx,cy) -> (tabuleiro !! cx !! cy) == 0) coords
 
 
@@ -179,19 +190,24 @@ coordValida (x,y) = x >= 0 && x < boardSize && y >= 0 && y < boardSize
 
 showElemento :: Int -> Char
 showElemento n
-  | n == 0 = '.'
+  | n == 0 = '~'
   | n == 1 = 'N'
   | n == 2 = 'X'
   | n == 3 = 'O'
 
+showElementoEncoberto :: Int -> Char
+showElementoEncoberto n
+  | n == 0 = '~'
+  | n == 1 = '~'
+  | n == 2 = 'X'
+  | n == 3 = 'O'
+
 showTabuleiro :: Tabuleiro -> String
-showTabuleiro tabuleiro = unlines [ [ showElemento (tabuleiro !! y !! x) | x <- [0..boardSize - 1] ] | y <- [0..boardSize - 1] ]
+showTabuleiro tabuleiro = unlines [ [ showElemento (tabuleiro !! x !! y) | x <- [0..boardSize - 1] ] | y <- [0..boardSize - 1] ]
 
-checkOrientValida :: Navio -> Coordenada -> Orientacao -> Bool
-checkOrientValida navio (x,y) orient =
-  let tam = tamanho navio
-  in case orient of
-       H -> all coordValida ([(x + i, y) | i <- [0..tam - 1]])
-       V -> all coordValida ([(x, y + i) | i <- [0..tam - 1]])
+encobrirTabuleiro :: Tabuleiro -> String
+encobrirTabuleiro board = unlines [ [ showElementoEncoberto (board !! x !! y) | x <- [0..boardSize - 1] ] | y <- [0..boardSize - 1] ]
 
-
+obterCoord :: Coordenada -> Tabuleiro -> Int
+obterCoord (x,y) board =
+    (board !! x) !! y
