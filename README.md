@@ -28,6 +28,7 @@ ansi-terminal – controle visual do terminal (cores, limpeza de tela, posiciona
 directory e filepath – suporte a manipulação de arquivos e diretórios
 
 
+
 ▶️ Como Executar o Projeto
 
 Pré-requisitos
