@@ -4,24 +4,49 @@ main = do menuPrincipal
 menuPrincipal :: IO()
 menuPrincipal = do
     putStrLn "Bem-vindo ao Batalha Naval!"
-    putStrLn "Escolha uma opção:"
+    putStrLn "\nEscolha uma opção:"
     putStrLn "(1) Jogar"
-    putStrLn "(2) Índice de navios e tamanhos"
+    putStrLn "(2) Tutorial"
     putStrLn "(3) Sair"
     putStr "> "
     opcao <- getLine
     case opcao of
         "1" -> iniciarJogo
-        "2" -> do
-            putStrLn "Porta Aviões - 5"
-            putStrLn "Encouraçado - 4"
-            putStrLn "Cruzador - 3"
-            putStrLn "Submarino - 2"
-            menuPrincipal
-        "3" -> putStrLn "Obrigado por jogar!"
+        "2" -> tutorial
+        "3" -> putStrLn "\nObrigado por jogar!"
         _   -> do
             putStrLn "Opção inválida. Tente novamente."
             menuPrincipal
+
+
+tutorial :: IO()
+tutorial = do
+    putStrLn "\nBem vindo ao Batalha Naval! Nesse jogo o seu principal objetivo é afundar todas as embarcações do seu oponente."
+    putStrLn "Ao começar o jogo você tera em sua visão dois tabuleiros 10x10 definido em intervalos de 0 a 9 da seguinte forma:"
+    putStrLn "   0  1  2  3  4  5  6  7  8  9              GLOSSÁRIO: "
+    putStrLn "0  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~              ~ -> ÁGUA " 
+    putStrLn "1  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~              N -> NAVIO "
+    putStrLn "2  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~              X -> NAVIO ACERTADO "
+    putStrLn "3  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~              O -> ESPAÇO ACERTADO VAZIO "
+    putStrLn "4  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~"
+    putStrLn "5  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~"
+    putStrLn "6  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~"
+    putStrLn "7  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~"
+    putStrLn "8  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~"
+    putStrLn "9  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~"
+    putStrLn "O tabuleiro a esquerda é o seu no qual você poderá colocar os seus navios e o tabuleiro a direita é o do seu oponente,"
+    putStrLn "para alocar as suas embarcações basta fornecer a linha (x) e a coluna (y) que você deseja colocar a primeira parte dela seguida"
+    putStrLn "da orientação (Vertical ou Horizontal) que você deseja que ela tome, caso você decida que quer o navio na horizontal a coordenada"
+    putStrLn "fornecida anteriormente será a primeira parte do navio e as demais partes serão posicionadas a direita dessa coordenada no tabuleiro,"
+    putStrLn "caso você decida posicionar o seu navio na vertical a coordenada obtida ainda será a primeira parte posicionada porém as demais partes"
+    putStrLn "serão colocadas abaixo da coordenada inicial."
+    putStrLn "Após a etapa de alocação dos navios o jogador terá acesso a opção de atirar no tabuleiro do seu oponente em determinada coordenada"
+    putStrLn "em seguida ele receberá um feedback se o tiro foi ou não certeiro (ou seja se ele acertou alguma embarcação) e ele passará a vez para"
+    putStrLn "oponente e a prioridade de ataque ficará alternando desse modo até que uma das partes afunde todos os navios presentes no tabuleiro inimigo\n"
+    menuPrincipal
+
+
+
 
 iniciarJogo :: IO()
 iniciarJogo = do
@@ -52,22 +77,24 @@ iniciarJogo = do
     tabuleiroCpu <- putNavioManual tabuleiroCpu (naviosDefault !! 1) (2,2) V
     tabuleiroCpu <- putNavioManual tabuleiroCpu (naviosDefault !! 2) (5,5) H
     tabuleiroCpu <- putNavioManual tabuleiroCpu (naviosDefault !! 3) (7,7) V
+    tabuleiroCpu <- putNavioManual tabuleiroCpu (naviosDefault !! 4) (1,7) V
+    tabuleiroCpu <- putNavioManual tabuleiroCpu (naviosDefault !! 5) (7,4) H
 
     jogoLoop tabuleiroUsr tabuleiroCpu
 
 jogoLoop :: Tabuleiro -> Tabuleiro -> IO()
 jogoLoop tabuleiroUsr tabuleiroCpu = do
-    putStrLn "Sua vez de atirar!"
+    putStrLn "\nSua vez de atirar!"
     boardCpu <- makeShot tabuleiroCpu
     putStrLn (showTabuleiro tabuleiroUsr boardCpu)
     if checkVictory boardCpu
-      then putStrLn "Parabéns! Você venceu!"
+      then putStrLn "\nParabéns! Você venceu!"
       else do
-        putStrLn "Vez da CPU..."
+        putStrLn "\nVez da CPU..."
         boardUsr <- makeShotCpu tabuleiroUsr
         putStrLn (showTabuleiro boardUsr boardCpu)
         if checkVictory boardUsr
-          then putStrLn "A CPU venceu! Tente novamente."
+          then putStrLn "\nA CPU venceu! Tente novamente."
           else jogoLoop boardUsr boardCpu
 
 checkVictory :: Tabuleiro -> Bool
@@ -79,10 +106,10 @@ makeShotCpu tabuleiro = do
     let resultado = checkHit tabuleiro coord
     case resultado of
       2 -> do
-        putStrLn ("CPU acertou na coordenada " ++ show coord ++ "!")
+        putStrLn ("\nCPU acertou na coordenada " ++ show coord ++ "!")
         return (atualizaIndice tabuleiro coord 2)
       3 -> do
-        putStrLn ("CPU errou na coordenada " ++ show coord ++ ".")
+        putStrLn ("\nCPU errou na coordenada " ++ show coord ++ ".")
         return (atualizaIndice tabuleiro coord 3)
 
 -- Apenas prova de conceito: gera a primeira coordenada válida no tabuleiro
@@ -95,13 +122,13 @@ makeShot tabuleiro = do
     let resultado = checkHit tabuleiro coord
     case resultado of
       -1 -> do
-        putStrLn "Posição já atacada. Tente novamente."
+        putStrLn "\nPosição já atacada. Tente novamente."
         makeShot tabuleiro
       2 -> do
-        putStrLn "Acertou!"
+        putStrLn "\nAcertou!"
         return (atualizaIndice tabuleiro coord 2)
       3 -> do
-        putStrLn "Errou!"
+        putStrLn "\nErrou!"
         return (atualizaIndice tabuleiro coord 3)
 
 checkHit :: Tabuleiro -> Coordenada -> Int
@@ -118,16 +145,16 @@ atualizaIndice tabuleiro (x,y) val =
 
 putNavio :: Tabuleiro -> Navio -> IO Tabuleiro
 putNavio tabuleiro navio = do
-    putStrLn ("Posicione o " ++ tipo navio ++ " (tamanho " ++ show (tamanho navio) ++ ").")
+    putStrLn ("\nPosicione o " ++ tipo navio ++ " (tamanho " ++ show (tamanho navio) ++ ").")
     coord <- getCoordenada
     orient <- getOrient
 
     if checkOverlap tabuleiro navio coord orient
       then do
-        putStrLn "Navio posicionado com sucesso!"
+        putStrLn "\nNavio posicionado com sucesso!"
         return (posicionarNavio tabuleiro navio coord orient)
       else do
-        putStrLn "Posição inválida para o navio."
+        putStrLn "\nPosição inválida para o navio."
         putNavio tabuleiro navio
 
 putNavioManual :: Tabuleiro -> Navio -> Coordenada -> Orientacao -> IO Tabuleiro
