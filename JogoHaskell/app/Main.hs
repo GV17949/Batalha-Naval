@@ -16,7 +16,7 @@ menuPrincipal = do
     putStrLn "(1) Jogar"
     putStrLn "(2) Índice de navios e tamanhos"
     putStrLn "(3) Sair"
-    putStrLn "> "
+    putStr "> "
     opcao <- getLine
     case opcao of
         "1" -> iniciarJogo
@@ -68,11 +68,31 @@ iniciarJogo = do
 
 iniciarCombate :: Tabuleiro -> Tabuleiro -> IO()
 iniciarCombate boardJog boardCPU = do
+  let tabuleiroUsr = boardJog
+  let tabuleiroCpu = boardCPU
   putStrLn "Tabuleiro do oponente"
   putStrLn (encobrirTabuleiro boardCPU)
   putStrLn "Em qual coordenada deseja atirar?"
-  tiro <- getCoordenada
+  tabuleiroCpu <- makeShot tabuleiroCpu
   putStrLn "Ainda em desenvolvimento"
+
+makeShot :: Tabuleiro -> IO Tabuleiro
+makeShot tabuleiro = do
+    coord <- getCoordenada
+    let resultado = checkHit tabuleiro coord
+    case resultado of
+      2 -> do
+        putStrLn "Acertou!"
+        return (atualizaIndice tabuleiro coord 2)
+      3 -> do
+        putStrLn "Errou!"
+        return (atualizaIndice tabuleiro coord 3)
+
+checkHit :: Tabuleiro -> Coordenada -> Int
+checkHit tabuleiro (x,y) = 
+  if obterCoord (x,y) tabuleiro == 1
+    then 2 -- Hit
+    else 3 -- Miss
 
 atualizaIndice :: Tabuleiro -> Coordenada -> Int -> Tabuleiro
 atualizaIndice tabuleiro (x,y) val =
@@ -118,10 +138,10 @@ addSegmentoNavio tabuleiro (coord:coords) =
 getCoordenada :: IO Coordenada
 getCoordenada = do
     putStrLn "Coordenada x: "
-    putStr ">"
+    putStr "> "
     xStr <- getLine
     putStrLn "Coordenada y: "
-    putStr ">"
+    putStr "> "
     yStr <- getLine
     let x = read xStr :: Int
     let y = read yStr :: Int
@@ -135,7 +155,7 @@ getCoordenada = do
 getOrient :: IO Orientacao
 getOrient = do
   putStrLn "Orientação (H para horizontal, V para vertical): "
-  putStr ">"
+  putStr "> "
   orientStr <- getLine
   case orientStr of
     "H" -> return H
