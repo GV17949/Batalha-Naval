@@ -4,6 +4,7 @@ Este projeto consiste na implementação do jogo Batalha Naval, desenvolvido int
 
 O jogo é executado no terminal e aplica conceitos do paradigma funcional, explorando imutabilidade, funções puras, recursão e modularização, a fim de reproduzir de forma fiel o clássico jogo de tabuleiro.
 
+
 🎯 Objetivo do Projeto
 
 O objetivo principal é aplicar os conceitos estudados em sala de aula para: desenvolver um jogo completo utilizando Haskell e aplicar os conhecimentos do paradigma funcional. 
@@ -26,6 +27,7 @@ ansi-terminal – controle visual do terminal (cores, limpeza de tela, posiciona
 
 directory e filepath – suporte a manipulação de arquivos e diretórios
 
+
 ▶️ Como Executar o Projeto
 
 Pré-requisitos
@@ -42,6 +44,7 @@ Cabal instalado
 
 3. Compile e execute o jogo:
    cabal run Jogo
+
 
 📄 Licença
 
