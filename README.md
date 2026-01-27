@@ -1,6 +1,6 @@
 🛳️ BATALHA NAVAL EM HASKELL
 
-Este projeto consiste na implementação do jogo Batalha Naval, desenvolvido inteiramente em Haskell, como parte da disciplina Paradigmas de Linguagens de Programação da Universidade Federal de Campina Grande (UFCG), sob orientação do professor Ricardo.
+Implementação do jogo Batalha Naval, desenvolvido inteiramente em Haskell, como parte da disciplina Paradigmas de Linguagens de Programação da Universidade Federal de Campina Grande (UFCG), sob orientação do professor Ricardo.
 
 O jogo é executado no terminal e aplica conceitos do paradigma funcional, explorando imutabilidade, funções puras, recursão e modularização, a fim de reproduzir de forma fiel o clássico jogo de tabuleiro.
 
