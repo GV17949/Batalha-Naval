@@ -3,25 +3,20 @@ comecar_jogo :-
 
 tamanho_tabuleiro(10).
 
-% Aguá "~"
-espaco(0).
+espaco(0).  % Água "~"
+espaco(1).  % Navio 'N'
+espaco(2).  % Acerto 'X'
+espaco(3).  % Erro 'O'
 
-% Navio 'N'
-espaco(1).
+exibir_espaco_usr(0, "~").
+exibir_espaco_usr(1, "N").
+exibir_espaco_usr(2, "X").
+exibir_espaco_usr(3, "O").
 
-% Acerto 'O'
-espaco(2).
-
-% Erro 'X'
-espaco(3).
-
-exibir_espaco(0, "~").
-
-exibir_espaco(1, "N").
-
-exibir_espaco(2, "O").
-
-exibir_espaco(3, "X").
+exibir_espaco_cpu(0, "~").
+exibir_espaco_cpu(1, "N").
+exibir_espaco_cpu(2, "X").
+exibir_espaco_cpu(3, "O").
 
 criar_tabuleiro(Tabuleiro) :-
 	tamanho_tabuleiro(N),
@@ -41,7 +36,7 @@ navios([
 
 
 menu :- 
-	writeln(" Bem-vindo ao Batalha-Naval!"),
+	writeln("Bem-vindo ao Batalha-Naval!"),
 	
 	nl,
 	writeln(" (1) Jogar"),
@@ -49,15 +44,17 @@ menu :-
 	writeln(" (3) Sair"),
 	nl,
 	
-	write(" >"),
+	write("> "),
 
 	read_line_to_string(user_input, Opcao),
 	case(Opcao).
 
 case("1") :-
-	write(" Jogo ainda em desenvolvimento"),
+	write("Jogo ainda em desenvolvimento"),
 	nl,
-	desenhar_tabuleiro(Tabuleiro_Usr),
+    criar_tabuleiro(Tab_Usr),
+    criar_tabuleiro(Tab_Cpu),
+	desenhar_tabuleiro(Tab_Usr, Tab_Cpu),
 	menu.
 
 
@@ -67,7 +64,8 @@ case("2") :-
 
 case("3") :-
 	nl,
-	write(" Obrigado por jogar!"),
+	write("Obrigado por jogar!"),
+    nl,
 	halt.
 
 case(_) :-
@@ -101,26 +99,31 @@ tutorial :-
 	writeln(" oponente e a prioridade de ataque ficará alternando desse modo até que uma das partes afunde todos os navios presentes no tabuleiro inimigo"),
 	nl.
 
-desenhar_tabuleiro(Tabuleiro_Usr) :-
- tamanho_tabuleiro(T),
-    T1 is T - 1,
-    % Cabeçalho eixo X
-    write('   '), forall(between(0, T1, I), format('~d  ', [I])),
+desenhar_tabuleiro(Tab_Usr, Tab_Cpu) :-
+    maplist(print_linha(), Tab_Usr, Tab_Cpu).
+
+print_linha(Tab1, Tab2) :-
+    print_espacos_usr(Tab1),
     write('     '),
-    write('   '), forall(between(0, T1, I), format('~d  ', [I])),
-    nl,
-    % Linhas com eixo Y
-    forall(between(0, T1, I),
-           (   % coordenada Y do jogador
-               format('~|~t~d~2+ ', [I]),
-               nth0(I, TabJog, LinhaJog),
-               maplist(exibir_espaco, LinhaJog, SimbolosJog),
-               atomic_list_concat(SimbolosJog, ' ', LinhaJogStr),
-               write(LinhaJogStr),
-               write('      '),
-               nl
-           )),
-    nl.	
+    print_espacos_cpu(Tab2),
+    nl.
+
+print_espacos_usr([X]) :-
+    exibir_espaco_usr(X, S),
+    write(S).
+print_espacos_usr([X|R]) :-
+    exibir_espaco_usr(X, S),
+    write(S),
+    print_espacos_usr(R).
+
+print_espacos_cpu([X]) :-
+    exibir_espaco_cpu(X, S),
+    write(S).
+print_espacos_cpu([X|R]) :-
+    exibir_espaco_cpu(X, S),
+    write(S),
+    print_espacos_cpu(R).
+
+
 
 :- menu.
-
