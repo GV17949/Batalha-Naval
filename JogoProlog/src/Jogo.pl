@@ -55,6 +55,14 @@ case("1") :-
     criar_tabuleiro(Tab_Usr),
     criar_tabuleiro(Tab_Cpu),
 	desenhar_tabuleiro(Tab_Usr, Tab_Cpu),
+    obter_espaco(Tab_Usr, (2,2), V),
+    write(V),
+    nl,
+    atualiza_espaco(Tab_Usr, (2,2), 1, New_Tab_Usr),
+    desenhar_tabuleiro(New_Tab_Usr, Tab_Cpu),
+    obter_espaco(New_Tab_Usr, (2,2), V2),
+    write(V2),
+    nl,
 	menu.
 
 
@@ -124,6 +132,24 @@ print_espacos_cpu([X|R]) :-
     write(S),
     print_espacos_cpu(R).
 
+coord_valida((X,Y)) :-
+    integer(X),
+    integer(Y),
+    tamanho_tabuleiro(N),
+    X >= 0, X < N,
+    Y >= 0, Y < N.
+
+obter_espaco(Tab, (X,Y), Valor) :-
+    nth0(X, Tab, Linha),
+    nth0(Y, Linha, Valor).
+
+atualiza_espaco(Tab_In, (X,Y), Valor, Tab_Out) :-
+    nth0(X, Tab_In, Linha_In, Resto_Linhas),
+    atualiza_index(Y, Valor, Linha_In, Linha_Out),
+    nth0(X, Tab_Out, Linha_Out, Resto_Linhas).
+atualiza_index(Index, Valor, Lista_In, Lista_Out) :-
+    nth0(Index, Lista_In, _, Rest),
+    nth0(Index, Lista_Out, Valor, Rest).
 
 
 :- menu.
