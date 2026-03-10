@@ -55,16 +55,25 @@ case("1") :-
     criar_tabuleiro(Tab_Usr),
     criar_tabuleiro(Tab_Cpu),
 	desenhar_tabuleiro(Tab_Usr, Tab_Cpu),
-    obter_espaco(Tab_Usr, (2,2), V),
+    obter_espaco(Tab_Usr, (3,2), V),
     write(V),
     nl,
-    atualiza_espaco(Tab_Usr, (2,2), 1, New_Tab_Usr),
+    atualiza_espaco(Tab_Usr, (3,2), 1, New_Tab_Usr),
     desenhar_tabuleiro(New_Tab_Usr, Tab_Cpu),
-    obter_espaco(New_Tab_Usr, (2,2), V2),
+    obter_espaco(New_Tab_Usr, (3,2), V2),
     write(V2),
     nl,
+    gera_navio((2,2), horizontal, 5, PosicoesH),
+    writeln(PosicoesH),
+    gera_navio((2,2), vertical, 5, PosicoesV),
+    writeln(PosicoesV),
+    valida_pos(PosicoesH, Tab_Usr, P1),
+    writeln(P1),
+    gera_navio((6,2), vertical, 5, PosicoesV2),
+    writeln(PosicoesV2),
+    valida_pos(PosicoesV2, Tab_Usr, P2),
+    writeln(P2),
 	menu.
-
 
 case("2") :-
 	tutorial,
@@ -150,6 +159,20 @@ atualiza_espaco(Tab_In, (X,Y), Valor, Tab_Out) :-
 atualiza_index(Index, Valor, Lista_In, Lista_Out) :-
     nth0(Index, Lista_In, _, Rest),
     nth0(Index, Lista_Out, Valor, Rest).
+
+gera_navio((X,Y), vertical, Size, Posicoes) :-
+    End_X is X + Size - 1,
+    findall((Xi,Y), between(X, End_X, Xi), Posicoes).
+gera_navio((X,Y), horizontal, Size, Posicoes) :-
+    End_Y is Y + Size - 1,
+    findall((X,Yi), between(Y, End_Y, Yi), Posicoes).
+
+valida_pos(Posicoes, Tab, true) :-
+    forall(member(Coord, Posicoes),
+           (coord_valida(Coord),
+            obter_espaco(Tab, Coord, V),
+            V =:= 0)).
+valida_pos(_Posicoes, _Tab, false).
 
 
 :- menu.
