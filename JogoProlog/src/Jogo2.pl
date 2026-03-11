@@ -96,11 +96,7 @@ menu :-
 		halt.
 
 	case("5") :-
-		criar_tabuleiro(Tab_Base),
-		posicionar_navios(navios, Tab_Base, Tab_Usr),
-		desenhar_tabuleiro(Tab_Usr),
-		halt.
-
+        posicionar_navios.
 
 	case(_) :-
 		nl,	
@@ -109,12 +105,48 @@ menu :-
 		menu.
 
 
-posicionar_navios([], Tab, Tab).
-posicionar_navios([Head|Tail], Tab_In, Tab_Out) :-
-    navio(Head, Tipo, Tamanho),
-    format("Posicione o ~w (tamanho ~w).~n", [Tipo, Tamanho]),
-    obter_coord(Tab_In, Tamanho, Tab_Temp),
-    posicionar_navio(Tail, Tab_Temp, Tab_Out).
+posicionar_navios :-
+    criar_tabuleiro(Tab_base),
+    criar_tabuleiro(Tab_cpu_base),
+    posicionar_cpu(Tab_cpu_base, Tab_cpu),
+    desenhar_tabuleiro(Tab_base, Tab_cpu),
+    nl,
+    writeln("Posicione o Porta Aviões (tamanho 5)"),
+    nl,
+    obter_coord(Tab_base, 5, Tab_Usr1),
+    nl,
+    desenhar_tabuleiro(Tab_Usr1, Tab_cpu),
+    nl,
+    writeln("Posicione o Encouraçado (tamanho 4)"),
+    nl,
+    obter_coord(Tab_Usr1, 4, Tab_Usr2),
+    nl,
+    desenhar_tabuleiro(Tab_Usr2, Tab_cpu),
+    nl,
+    writeln("Posicione o Cruzador (tamanho 3)"),
+    nl,
+    obter_coord(Tab_Usr2, 3, Tab_Usr3),
+    nl,
+    desenhar_tabuleiro(Tab_Usr3, Tab_cpu),
+    nl,
+    writeln("Posicione o Submarino (tamanho 2)"),
+    nl,
+    obter_coord(Tab_Usr3, 2, Tab_Usr4),
+    nl,
+    desenhar_tabuleiro(Tab_Usr4, Tab_cpu),
+    nl,
+    !.
+
+posicionar_cpu(Tab_In, Tab_Out) :-
+    posicionar_navios_cpu(Tab_In, (0,0), horizontal, 5, Tab_temp1),
+    posicionar_navios_cpu(Tab_temp1, (2,3), vertical, 4, Tab_temp2),
+    posicionar_navios_cpu(Tab_temp2, (5,5), horizontal, 3, Tab_temp3),
+    posicionar_navios_cpu(Tab_temp3, (1,7), vertical, 2, Tab_Out).
+
+
+posicionar_navios_cpu(Tab_In, (X,Y), Orient, Size, Tab_Out) :-
+    gera_navio((X,Y), Orient, Size, Posicoes),
+    put_navio(Tab_In, Posicoes, Tab_Out).
 
 tutorial :-
 	nl,
