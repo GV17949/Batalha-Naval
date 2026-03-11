@@ -9,12 +9,12 @@ espaco(2).  % Acerto 'X'
 espaco(3).  % Erro 'O'
 
 exibir_espaco_usr(0, "~").
-exibir_espaco_usr(1, "~").
+exibir_espaco_usr(1, "N").
 exibir_espaco_usr(2, "X").
 exibir_espaco_usr(3, "O").
 
 exibir_espaco_cpu(0, "~").
-exibir_espaco_cpu(1, "N").
+exibir_espaco_cpu(1, "~").
 exibir_espaco_cpu(2, "X").
 exibir_espaco_cpu(3, "O").
 
@@ -24,6 +24,7 @@ criar_tabuleiro(Tabuleiro) :-
 	maplist(=(0), Linha),
 	length(Tabuleiro, N),
 	maplist(=(Linha), Tabuleiro).
+
 
 navio(1, ("Porta Aviões", 5)).
 navio(2, ("Encouraçado", 4)).
@@ -48,55 +49,95 @@ menu :-
 	read_line_to_string(user_input, Opcao),
 	case(Opcao).
 
-case("1") :-
-		write("Jogo ainda em desenvolvimento"),
-	nl,
-    criar_tabuleiro(Tab_Usr),
-    criar_tabuleiro(Tab_Cpu),
-	desenhar_tabuleiro(Tab_Usr, Tab_Cpu),
-    obter_espaco(Tab_Usr, (3,2), V),
-    write(V),
+	case("1") :-
+        posicionar_navios.
+
+	case("2") :-
+		tutorial,
+		menu.
+
+	case("3") :-
+		nl,
+		write("Obrigado por jogar!"),
+        nl,
+		halt.
+
+	case(_) :-
+		nl,	
+		write("Opção inválida. Tente novamente"),
+		nl,
+		menu.
+
+
+posicionar_navios :-
+    criar_tabuleiro(Tab_base),
+    criar_tabuleiro(Tab_cpu_base),
+    posicionar_cpu(Tab_cpu_base, Tab_cpu),
+    desenhar_tabuleiro(Tab_base, Tab_cpu),
     nl,
-    atualiza_espaco(Tab_Usr, (3,2), 1, New_Tab_Usr),
-    desenhar_tabuleiro(New_Tab_Usr, Tab_Cpu),
-    obter_espaco(New_Tab_Usr, (3,2), V2),
-    write(V2),
+    writeln("Posicione o Porta Aviões (tamanho 5)"),
     nl,
-    gera_navio((2,2), horizontal, 5, PosicoesH),
-    writeln(PosicoesH),
-    gera_navio((2,2), vertical, 5, PosicoesV),
-    writeln(PosicoesV),
-    valida_pos(PosicoesH, Tab_Usr, P1),
-    writeln(P1),
-    gera_navio((6,2), vertical, 5, PosicoesV2),
-    writeln(PosicoesV2),
-    valida_pos(PosicoesV2, Tab_Usr, P2),
-    writeln(P2),
-	menu.
-
-case("2") :-
-	tutorial,
-	menu.
-
-case("3") :-
-	nl,
-	write("Obrigado por jogar!"),
+    obter_coord(Tab_base, 5, Tab_Usr1),
     nl,
-	halt.
+    desenhar_tabuleiro(Tab_Usr1, Tab_cpu),
+    nl,
+    writeln("Posicione o Encouraçado (tamanho 4)"),
+    nl,
+    obter_coord(Tab_Usr1, 4, Tab_Usr2),
+    nl,
+    desenhar_tabuleiro(Tab_Usr2, Tab_cpu),
+    nl,
+    writeln("Posicione o Cruzador (tamanho 3)"),
+    nl,
+    obter_coord(Tab_Usr2, 3, Tab_Usr3),
+    nl,
+    desenhar_tabuleiro(Tab_Usr3, Tab_cpu),
+    nl,
+    writeln("Posicione o Submarino (tamanho 2)"),
+    nl,
+    obter_coord(Tab_Usr3, 2, Tab_Usr),
+    nl,
+    desenhar_tabuleiro(Tab_Usr, Tab_cpu),
+    nl,
+    loop_jogo(Tab_Usr, Tab_cpu).
 
-case("4") :-
-	writeln("Testar posicionamento"),
-	criar_tabuleiro(Tab_Base),
-	criar_tabuleiro(Tab_Cpu),
-	obter_coord(Tab_Base, 5, Tab_Usr),
-	desenhar_tabuleiro(Tab_Usr, Tab_Cpu),
-	halt.
+loop_jogo(Tab_Usr, Tab_cpu) :-
+    nl,
+    writeln("Sua vez de atirar!"),
+    nl,
+    make_shot(Tab_cpu, Tab_cpu_post_shot),
+    desenhar_tabuleiro(Tab_Usr, Tab_cpu_post_shot),
+    check_win(Tab_cpu_post_shot, V),
+    (V -> vitoria_usuario ; turno_cpu(Tab_Usr, Tab_cpu_post_shot)).
+
+turno_cpu(Tab_Usr, Tab_cpu) :-
+    nl,
+    writeln("Vez da CPU...."),
+    make_shot_cpu(Tab_Usr, Tab_Usr_post_shot),
+    desenhar_tabuleiro(Tab_Usr_post_shot, Tab_cpu),
+    check_win(Tab_Usr_post_shot, V),
+    (V -> vitoria_cpu ; loop_jogo(Tab_Usr_post_shot, Tab_cpu)).
+
+vitoria_cpu :-
+    nl,
+    writeln("A CPU venceu! Tente novamente."),
+    menu.
+
+vitoria_usuario :-
+    nl,
+    writeln("Parabéns! você venceu!"),
+    menu.
+
+posicionar_cpu(Tab_In, Tab_Out) :-
+    posicionar_navios_cpu(Tab_In, (0,0), horizontal, 5, Tab_temp1),
+    posicionar_navios_cpu(Tab_temp1, (2,3), vertical, 4, Tab_temp2),
+    posicionar_navios_cpu(Tab_temp2, (5,5), horizontal, 3, Tab_temp3),
+    posicionar_navios_cpu(Tab_temp3, (1,7), vertical, 2, Tab_Out).
 
 
-case(_) :-
-	nl,	
-	write(" Opção inválida. Tente novamente"),
-	menu.
+posicionar_navios_cpu(Tab_In, (X,Y), Orient, Size, Tab_Out) :-
+    gera_navio((X,Y), Orient, Size, Posicoes),
+    put_navio(Tab_In, Posicoes, Tab_Out).
 
 tutorial :-
 	nl,
@@ -185,13 +226,6 @@ valida_pos(Posicoes, Tab, true) :-
 
 valida_pos(_Posicoes, _Tab, false).
 
-posicionar_navios([], Tab, Tab).
-posicionar_navios([Head|Tail], Tab_In, Tab_Out) :-
-    navio(Head, Tipo, Tamanho),
-    format("Posicione o ~w (tamanho ~w).~n", [Tipo, Tamanho]),
-    obter_coord(Tab_In, Tamanho, Tab_Temp),
-    posicionar_navio(Tail, Tab_Temp, Tab_Out).
-
 obter_coord(Tab_In, Size, Tab_Out) :-
     writeln("Coordenada X:"),
     write("> "),
@@ -236,6 +270,63 @@ put_navio(Tab_In, [(X,Y)|Tail], Tab_Out) :-
     atualiza_espaco(Tab_In, (X,Y), 1, New_Tab),
     put_navio(New_Tab, Tail, Tab_Out), !.
 
+make_shot_cpu(Tab_In, Tab_Out) :-
+    tamanho_tabuleiro(N),
+    
+    N_max is N - 1,
+    random_between(0, N_max, X),
+    random_between(0, N_max, Y),
+    
+    obter_espaco(Tab_In, (X,Y), V),
+    case_shot_cpu(Tab_In, (X,Y), V, Tab_Out).
 
+make_shot(Tab_In, Tab_Out) :-
+    writeln("Coordenada X:"),
+    write("> "),
+    read_line_to_string(user_input, X_Str),
+    number_string(X, X_Str),
+    writeln("Coordenada Y:"),
+    write("> "),
+    read_line_to_string(user_input, Y_Str),
+    number_string(Y, Y_Str),
+    obter_espaco(Tab_In, (X,Y), V),
+    case_shot(Tab_In, (X,Y), V, Tab_Out).
+
+case_shot(Tab_In, (X,Y), 0, Tab_Out) :-
+    nl,
+    writeln("Errou!"),
+    nl,
+    atualiza_espaco(Tab_In, (X,Y), 3, Tab_Out).
+case_shot(Tab_In, (X,Y), 1, Tab_Out) :-
+    nl,
+    writeln("Acertou!"),
+    nl,
+    atualiza_espaco(Tab_In, (X,Y), 2, Tab_Out).
+case_shot(Tab_In, _, _, Tab_Out) :-
+    writeln("Posição já atacada. Tente novamente."),
+    make_shot(Tab_In, Tab_Out).
+
+case_shot_cpu(Tab_In, (X,Y), 0, Tab_Out) :-
+    nl,
+    writeln("A CPU errou!"),
+    nl,
+    atualiza_espaco(Tab_In, (X,Y), 3, Tab_Out).
+case_shot_cpu(Tab_In, (X,Y), 1, Tab_Out) :-
+    nl,
+    writeln("A CPU acertou!"),
+    nl,
+    atualiza_espaco(Tab_In, (X,Y), 2, Tab_Out).
+case_shot_cpu(Tab_In, _, _, Tab_Out) :-
+    make_shot_cpu(Tab_In, Tab_Out).
+
+check_win(Tab, true) :-
+    forall(member(Linha, Tab),
+           check_win_line(Linha, true)).
+check_win(_Tab, false).
+
+check_win_line(Linha, true) :-
+    forall(member(Espaco, Linha),
+           Espaco =\= 1).
+check_win_line(_Linha, false).
 
 :- menu.
