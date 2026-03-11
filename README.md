@@ -1,52 +1,55 @@
-🛳️ BATALHA NAVAL EM HASKELL
+# Batalha Naval: Haskell & Prolog 🚢💥
 
-Implementação do jogo Batalha Naval, desenvolvido inteiramente em Haskell, como parte da disciplina Paradigmas de Linguagens de Programação da Universidade Federal de Campina Grande (UFCG), sob orientação do professor Ricardo.
+Este diretório contém as implementações do jogo Batalha Naval desenvolvidas para a disciplina de Paradigmas de Linguagens de Programação (PLP), referente ao período 2025.2 do curso de Ciência da Computação da Universidade Federal de Campina Grande (UFCG).
 
-O jogo é executado no terminal e aplica conceitos do paradigma funcional, explorando imutabilidade, funções puras, recursão e modularização, a fim de reproduzir de forma fiel o clássico jogo de tabuleiro.
+O projeto foi proposto pelo professor Ricardo Santos de Oliveira e tem como objetivo principal a aplicação prática dos conceitos de programação funcional e lógica.
 
+# 📌 Sobre o Projeto
 
-🎯 Objetivo do Projeto
+O jogo busca simular as mecânicas tradicionais do Batalha Naval clássico em ambiente de terminal, focando em:
 
-O objetivo principal é aplicar os conceitos estudados em sala de aula para: desenvolver um jogo completo utilizando Haskell e aplicar os conhecimentos do paradigma funcional. 
+    Posicionamento de Navios: Alocação estratégica das embarcações no tabuleiro.
 
+    Alternância de Turnos: Lógica de jogo baseada em rodadas entre jogador e máquina.
 
-⚙️ Tecnologias Utilizadas
+    Sistema de Ataques: Verificação de coordenadas e feedback de acerto ou não.
 
-Haskell (GHC 9.6.x) – Linguagem funcional utilizada em toda a implementação
+    Condição de Vitória: Verificação automática de quando todos os navios de um oponente foram afundados.
 
-Cabal – Ferramenta para gerenciamento, build e execução do projeto
+    Interface I/O: Interação fluida via entrada e saída padrão. 
 
-Terminal – Interface de entrada e saída de dados
+    🛠️ Tecnologias e Paradigmas
 
+O projeto está dividido em duas versões principais:
 
-Bibliotecas adicionais:
+    Haskell (Paradigma Funcional): Explora a imutabilidade, funções de alta ordem, tipos de dados algébricos e a gestão de estado através de recursão.
 
-random – geração automática das posições dos navios
+    Prolog (Paradigma Lógico): Foca em fatos, regras e unificação para gerenciar o tabuleiro e as condições de jogo.
 
-ansi-terminal – controle visual do terminal (cores, limpeza de tela, posicionamento)
+# 💜 Versão em Haskell
 
-directory e filepath – suporte a manipulação de arquivos e diretórios
+Certifique-se de ter o GHC (Glasgow Haskell Compiler) instalado.
 
+      # Para compilar e rodar:
+      ghc -o batalha_naval_haskell Main.hs
+      ./batalha_naval_haskell
+      
+      # Ou apenas rodar via interpretador:
+      runghc Main.hs
 
+# 🦉 Versão em Prolog
 
-▶️ Como Executar o Projeto
+Certifique-se de ter o SWI-Prolog instalado.
 
-Pré-requisitos
+      # Iniciar o interpretador com o arquivo:
+      swipl -s jogo.pl
 
-GHC 9.6.x instalado
+      # Dentro do interpretador, inicie o jogo (exemplo):
+      ?- jogar.
 
-Cabal instalado
+# 🎓 Alunos
 
-1. Clone o repositório:
-   git clone <url-do-repositorio>
-
-2. Acesse a pasta do projeto:
-   cd Batalha-Naval/JogoHaskell
-
-3. Compile e execute o jogo:
-   cabal run Jogo
-
-
-📄 Licença
-
-Este projeto está licenciado sob a BSD 3-Clause License. Consulte o arquivo LICENSE para mais informações.
+- Ana Lívia Costa Celestino Santos
+- Gabriel Victor Santos Lima
+- João Victor Muniz Cabral
+- Luis Henrique Araújo Ramos 
