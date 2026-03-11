@@ -261,9 +261,9 @@ case_orientacao("V", Tab_In, (X,Y), Size, Tab_Out) :-
 case_orientacao(_, Tab_In, (X,Y), Size, Tab_Out) :-
     retry_ob_orient(Tab_In, (X,Y), Size, Tab_Out).
 
-retry_ob_orient(Tab_In, (X,Y), Size, Tab_Out) :-
+retry_ob_orient(Tab_In, _, Size, Tab_Out) :-
     writeln("Orientação inválida. Tente novamente"),
-    obter_orient(Tab_In, (X,Y), Size, Tab_Out).
+    obter_coord(Tab_In, Size, Tab_Out).
 
 put_navio(Tab_In, [], Tab_In).
 put_navio(Tab_In, [(X,Y)|Tail], Tab_Out) :-
