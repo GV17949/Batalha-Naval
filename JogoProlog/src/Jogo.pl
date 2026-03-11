@@ -9,7 +9,7 @@ espaco(2).  % Acerto 'X'
 espaco(3).  % Erro 'O'
 
 exibir_espaco_usr(0, "~").
-exibir_espaco_usr(1, "N").
+exibir_espaco_usr(1, "~").
 exibir_espaco_usr(2, "X").
 exibir_espaco_usr(3, "O").
 
@@ -25,14 +25,13 @@ criar_tabuleiro(Tabuleiro) :-
 	length(Tabuleiro, N),
 	maplist(=(Linha), Tabuleiro).
 
-navios([
-	navio("Porta Aviões", 5),
-	navio("Encouraçado", 4),
-	navio("Cruzador 1", 3),
-	navio("Cruzadro 2", 3),
-	navio("Submarino 1", 2),
-	navio("Submarino 2", 2)
-]).
+navio(1, ("Porta Aviões", 5)).
+navio(2, ("Encouraçado", 4)).
+navio(3, ("Cruzador 1", 3)).
+navio(4, ("Cruzador 2", 3)).
+navio(5, ("Submarino 1", 2)).
+navio(6, ("Submarino 2", 2)).
+navios([1, 2, 3, 4, 5, 6]).
 
 
 menu :- 
@@ -173,6 +172,57 @@ valida_pos(Posicoes, Tab, true) :-
             obter_espaco(Tab, Coord, V),
             V =:= 0)).
 valida_pos(_Posicoes, _Tab, false).
+
+posicionar_navios([]) :- !.
+posicionar_navios([Head|Tail]) :-
+    navio(Head, Tipo, Tamanho),
+    format("Posicione o ~w (tamanho ~w).~n", [Tipo, Tamanho]),
+    posicionar_navio(Tail).
+
+obter_coord(Tab_In, Size, Tab_Out) :-
+    writeln("Coordenada X:"),
+    write("> "),
+    read_line_to_string(user_input, X_Str),
+    number_string(X, X_Str),
+    writeln("Coordenada Y:"),
+    write("> "),
+    read_line_to_string(user_input, Y_Str),
+    number_string(Y, Y_Str),
+    (coord_valida((X,Y)) -> obter_orient(Tab_In, (X,Y), Size, Tab_Out)
+        ; retry_ob_coord(Tab_In, Size, Tab_Out)).
+retry_ob_coord(Tab_In, Size, Tab_Out) :-
+    writeln("Coordenada inválida. Tente novamente"),
+    obter_coord(Tab_In, Size, Tab_Out).
+
+obter_orient(Tab_In, (X,Y), Size, Tab_Out) :-
+    writeln("Orientação (H para horizontal, V para vertical):"),
+    write("> "),
+    read_line_to_string(user_input, S),
+    string_upper(S, Orient),
+    case_orientacao(Orient, Tab_In, (X,Y), Size, Tab_Out).
+
+case_orientacao("H", Tab_In, (X,Y), Size, Tab_Out) :-
+    gera_navio((X,Y), horizontal, Size, Posicoes),
+    valida_pos(Posicoes, Tab_In, Resultado),
+    (Resultado -> put_navio(Tab_In, Posicoes, Tab_Out) ;
+        retry_ob_orient(Tab_In, (X,Y), Size, Tab_Out)).
+case_orientacao("V", Tab_In, (X,Y), Size, Tab_Out) :-
+    gera_navio((X,Y), vertical, Size, Posicoes),
+    valida_pos(Posicoes, Tab_In, Resultado),
+    (Resultado -> put_navio(Tab_In, Posicoes, Tab_Out) ;
+        retry_ob_orient(Tab_In, (X,Y), Size, Tab_Out)).
+case_orientacao(_, Tab_In, (X,Y), Size, Tab_Out) :-
+    retry_ob_orient(Tab_In, (X,Y), Size, Tab_Out).
+
+retry_ob_orient(Tab_In, (X,Y), Size, Tab_Out) :-
+    writeln("Orientação inválida. Tente novamente"),
+    obter_orient(Tab_In, (X,Y), Size, Tab_Out).
+
+put_navio(Tab_In, [], Tab_In).
+put_navio(Tab_In, [(X,Y)|Tail], Tab_Out) :-
+    atualiza_espaco(Tab_In, (X,Y), 1, New_Tab),
+    put_navio(New_Tab, Tail, Tab_Out).
+
 
 
 :- menu.
