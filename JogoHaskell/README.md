@@ -1,30 +1,30 @@
-🛳️ BATALHA NAVAL EM HASKELL
+# 🛳️ BATALHA NAVAL EM HASKELL
 
 Implementação do jogo Batalha Naval, desenvolvido inteiramente em Haskell, como parte da disciplina Paradigmas de Linguagens de Programação da Universidade Federal de Campina Grande (UFCG), sob orientação do professor Ricardo.
 
 O jogo é executado no terminal e aplica conceitos do paradigma funcional, explorando imutabilidade, funções puras, recursão e modularização, a fim de reproduzir de forma fiel o clássico jogo de tabuleiro.
 
-🎯 Objetivo do Projeto
+# Objetivo do Projeto
 
 O objetivo principal é aplicar os conceitos estudados em sala de aula para: desenvolver um jogo completo utilizando Haskell e aplicar os conhecimentos do paradigma funcional.
 
-⚙️ Tecnologias Utilizadas
+# Tecnologias Utilizadas
 
-Haskell (GHC 9.6.x) – Linguagem funcional utilizada em toda a implementação
+- Haskell (GHC 9.6.x) – Linguagem funcional utilizada em toda a implementação
 
-Cabal – Ferramenta para gerenciamento, build e execução do projeto
+- Cabal – Ferramenta para gerenciamento, build e execução do projeto
 
-Terminal – Interface de entrada e saída de dados
+- Terminal – Interface de entrada e saída de dados
 
-Bibliotecas adicionais:
+# Bibliotecas adicionais:
 
-random – geração automática das posições dos navios
+    random – geração automática das posições dos navios
 
-ansi-terminal – controle visual do terminal (cores, limpeza de tela, posicionamento)
+    ansi-terminal – controle visual do terminal (cores, limpeza de tela, posicionamento)
 
-directory e filepath – suporte a manipulação de arquivos e diretórios
+    directory e filepath – suporte a manipulação de arquivos e diretórios
 
-▶️ Como Executar o Projeto
+# Como Executar o Projeto
 
 Pré-requisitos
 
@@ -38,6 +38,6 @@ Cabal instalado
 
     Compile e execute o jogo: cabal run Jogo
 
-📄 Licença
+# Licença
 
 Este projeto está licenciado sob a BSD 3-Clause License. Consulte o arquivo LICENSE para mais informações.
