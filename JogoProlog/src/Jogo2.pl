@@ -93,7 +93,15 @@ menu :-
 		desenhar_tabuleiro(Tab_Usr, Tab_Cpu),
 		obter_coord(Tab_Usr, 4, New_Tab_Usr),
 		desenhar_tabuleiro(New_Tab_Usr, Tab_Cpu),
-		halt.
+		obter_coord(Tab_Cpu, 2, New_Tab_Cpu),
+		desenhar_tabuleiro(New_Tab_Usr, New_Tab_Cpu),
+        make_shot(New_Tab_Cpu, Tab_Cpu_Post_Shot),
+		desenhar_tabuleiro(New_Tab_Usr, Tab_Cpu_Post_Shot),
+        make_shot(Tab_Cpu_Post_Shot, Tab_Cpu_Final),
+		desenhar_tabuleiro(New_Tab_Usr, Tab_Cpu_Final),
+        check_win(Tab_Cpu_Final, W),
+        writeln(W),
+		menu.
 
 	case("5") :-
         posicionar_navios.
@@ -278,5 +286,39 @@ put_navio(Tab_In, [], Tab_In).
 put_navio(Tab_In, [(X,Y)|Tail], Tab_Out) :-
     atualiza_espaco(Tab_In, (X,Y), 1, New_Tab),
     put_navio(New_Tab, Tail, Tab_Out), !.
+
+make_shot(Tab_In, Tab_Out) :-
+    writeln("Coordenada X:"),
+    write("> "),
+    read_line_to_string(user_input, X_Str),
+    number_string(X, X_Str),
+    writeln("Coordenada Y:"),
+    write("> "),
+    read_line_to_string(user_input, Y_Str),
+    number_string(Y, Y_Str),
+    obter_espaco(Tab_In, (X,Y), V),
+    case_shot(Tab_In, (X,Y), V, Tab_Out).
+
+case_shot(Tab_In, (X,Y), 0, Tab_Out) :-
+    writeln("Errou!"),
+    atualiza_espaco(Tab_In, (X,Y), 3, Tab_Out).
+case_shot(Tab_In, (X,Y), 1, Tab_Out) :-
+    writeln("Acertou!"),
+    atualiza_espaco(Tab_In, (X,Y), 2, Tab_Out).
+case_shot(Tab_In, _, _, Tab_Out) :-
+    writeln("Posição já atacada. Tente novamente."),
+    make_shot(Tab_In, Tab_Out).
+
+check_win(Tab, true) :-
+    forall(member(Linha, Tab),
+           check_win_line(Linha, true)).
+check_win(_Tab, false).
+
+check_win_line(Linha, true) :-
+    forall(member(Espaco, Linha),
+           Espaco =\= 1).
+check_win_line(_Linha, false).
+
+
 
 :- menu.
