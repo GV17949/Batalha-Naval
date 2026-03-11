@@ -4,29 +4,30 @@ Este diretório contém as implementações do jogo Batalha Naval desenvolvidas 
 
 O projeto foi proposto pelo professor Ricardo Santos de Oliveira e tem como objetivo principal a aplicação prática dos conceitos de programação funcional e lógica.
 
-# 📌 Sobre o Projeto
+# Sobre o Projeto
 
 O jogo busca simular as mecânicas tradicionais do Batalha Naval clássico em ambiente de terminal, focando em:
 
-    Posicionamento de Navios: Alocação estratégica das embarcações no tabuleiro.
+- Posicionamento de Navios: Alocação estratégica das embarcações no tabuleiro.
 
-    Alternância de Turnos: Lógica de jogo baseada em rodadas entre jogador e máquina.
+- Alternância de Turnos: Lógica de jogo baseada em rodadas entre jogador e máquina.
 
-    Sistema de Ataques: Verificação de coordenadas e feedback de acerto ou não.
+- Sistema de Ataques: Verificação de coordenadas e feedback de acerto ou não.
 
-    Condição de Vitória: Verificação automática de quando todos os navios de um oponente foram afundados.
+- Condição de Vitória: Verificação automática de quando todos os navios de um oponente foram afundados.
 
-    Interface I/O: Interação fluida via entrada e saída padrão. 
+- Interface I/O: Interação fluida via entrada e saída padrão.
 
-    🛠️ Tecnologias e Paradigmas
+
+# Tecnologias e Paradigmas
 
 O projeto está dividido em duas versões principais:
 
-    Haskell (Paradigma Funcional): Explora a imutabilidade, funções de alta ordem, tipos de dados algébricos e a gestão de estado através de recursão.
+- Haskell (Paradigma Funcional): Explora a imutabilidade, funções de alta ordem, tipos de dados algébricos e a gestão de estado através de recursão.
 
-    Prolog (Paradigma Lógico): Foca em fatos, regras e unificação para gerenciar o tabuleiro e as condições de jogo.
+- Prolog (Paradigma Lógico): Foca em fatos, regras e unificação para gerenciar o tabuleiro e as condições de jogo.
 
-# 💜 Versão em Haskell
+# Versão em Haskell
 
 Certifique-se de ter o GHC (Glasgow Haskell Compiler) instalado.
 
@@ -37,7 +38,7 @@ Certifique-se de ter o GHC (Glasgow Haskell Compiler) instalado.
       # Ou apenas rodar via interpretador:
       runghc Main.hs
 
-# 🦉 Versão em Prolog
+# Versão em Prolog
 
 Certifique-se de ter o SWI-Prolog instalado.
 
