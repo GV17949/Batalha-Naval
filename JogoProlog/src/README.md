@@ -28,18 +28,6 @@ O objetivo principal é consolidar os conhecimentos do paradigma lógico estudad
 
         forall/2 – Para verificação lógica de condições de vitória e integridade de posições.
 
-# Conceitos de Paradigma Lógico Aplicados
-
-Diferente da versão funcional, esta implementação foca em:
-
-- **Unificação:** Utilizada para traduzir os estados numéricos do tabuleiro em representações visuais (~, N, X, O).
-
-- **Base de Fatos:** Definição estática das propriedades dos navios e tamanhos do tabuleiro.
-
-- **Recursão e Acumuladores:** Utilizados para o preenchimento de listas e processamento de jogadas.
-
-- **Predicados Declarativos:** A condição de vitória não é um "loop de contagem", mas sim uma prova lógica da ausência de navios intactos no tabuleiro.
-
 # Como Executar o Projeto
 Pré-requisitos:
 
