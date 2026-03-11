@@ -32,13 +32,13 @@ O objetivo principal é consolidar os conhecimentos do paradigma lógico estudad
 
 Diferente da versão funcional, esta implementação foca em:
 
-- Unificação: Utilizada para traduzir os estados numéricos do tabuleiro em representações visuais (~, N, X, O).
+- **Unificação:** Utilizada para traduzir os estados numéricos do tabuleiro em representações visuais (~, N, X, O).
 
-- Base de Fatos: Definição estática das propriedades dos navios e tamanhos do tabuleiro.
+- **Base de Fatos:** Definição estática das propriedades dos navios e tamanhos do tabuleiro.
 
-- Recursão e Acumuladores: Utilizados para o preenchimento de listas e processamento de jogadas.
+- **Recursão e Acumuladores:** Utilizados para o preenchimento de listas e processamento de jogadas.
 
-- Predicados Declarativos: A condição de vitória não é um "loop de contagem", mas sim uma prova lógica da ausência de navios intactos no tabuleiro.
+- **Predicados Declarativos:** A condição de vitória não é um "loop de contagem", mas sim uma prova lógica da ausência de navios intactos no tabuleiro.
 
 # Como Executar o Projeto
 Pré-requisitos:
