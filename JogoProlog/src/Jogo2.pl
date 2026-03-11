@@ -9,7 +9,7 @@ espaco(2).  % Acerto 'X'
 espaco(3).  % Erro 'O'
 
 exibir_espaco_usr(0, "~").
-exibir_espaco_usr(1, "~").
+exibir_espaco_usr(1, "N").
 exibir_espaco_usr(2, "X").
 exibir_espaco_usr(3, "O").
 
@@ -24,6 +24,7 @@ criar_tabuleiro(Tabuleiro) :-
 	maplist(=(0), Linha),
 	length(Tabuleiro, N),
 	maplist(=(Linha), Tabuleiro).
+
 
 navio(1, ("Porta Aviões", 5)).
 navio(2, ("Encouraçado", 4)).
@@ -48,7 +49,7 @@ menu :-
 	read_line_to_string(user_input, Opcao),
 	case(Opcao).
 
-case("1") :-
+	case("1") :-
 		write("Jogo ainda em desenvolvimento"),
 	nl,
     criar_tabuleiro(Tab_Usr),
@@ -74,29 +75,46 @@ case("1") :-
     writeln(P2),
 	menu.
 
-case("2") :-
-	tutorial,
-	menu.
+	case("2") :-
+		tutorial,
+		menu.
 
-case("3") :-
-	nl,
-	write("Obrigado por jogar!"),
-    nl,
-	halt.
+	case("3") :-
+		nl,
+		write("Obrigado por jogar!"),
+	    	nl,
+		halt.
 
-case("4") :-
-	writeln("Testar posicionamento"),
-	criar_tabuleiro(Tab_Base),
-	criar_tabuleiro(Tab_Cpu),
-	obter_coord(Tab_Base, 5, Tab_Usr),
-	desenhar_tabuleiro(Tab_Usr, Tab_Cpu),
-	halt.
+	case("4") :-
+		writeln("Caso 4"),
+		criar_tabuleiro(Tab_Base),
+		criar_tabuleiro(Tab_Cpu),
+		obter_coord(Tab_Base, 5, Tab_Usr),
+		desenhar_tabuleiro(Tab_Usr, Tab_Cpu),
+		obter_coord(Tab_Usr, 4, New_Tab_Usr),
+		desenhar_tabuleiro(New_Tab_Usr, Tab_Cpu),
+		halt.
+
+	case("5") :-
+		criar_tabuleiro(Tab_Base),
+		posicionar_navios(navios, Tab_Base, Tab_Usr),
+		desenhar_tabuleiro(Tab_Usr),
+		halt.
 
 
-case(_) :-
-	nl,	
-	write(" Opção inválida. Tente novamente"),
-	menu.
+	case(_) :-
+		nl,	
+		write("Opção inválida. Tente novamente"),
+		nl,
+		menu.
+
+
+posicionar_navios([], Tab, Tab).
+posicionar_navios([Head|Tail], Tab_In, Tab_Out) :-
+    navio(Head, Tipo, Tamanho),
+    format("Posicione o ~w (tamanho ~w).~n", [Tipo, Tamanho]),
+    obter_coord(Tab_In, Tamanho, Tab_Temp),
+    posicionar_navio(Tail, Tab_Temp, Tab_Out).
 
 tutorial :-
 	nl,
@@ -185,13 +203,6 @@ valida_pos(Posicoes, Tab, true) :-
 
 valida_pos(_Posicoes, _Tab, false).
 
-posicionar_navios([], Tab, Tab).
-posicionar_navios([Head|Tail], Tab_In, Tab_Out) :-
-    navio(Head, Tipo, Tamanho),
-    format("Posicione o ~w (tamanho ~w).~n", [Tipo, Tamanho]),
-    obter_coord(Tab_In, Tamanho, Tab_Temp),
-    posicionar_navio(Tail, Tab_Temp, Tab_Out).
-
 obter_coord(Tab_In, Size, Tab_Out) :-
     writeln("Coordenada X:"),
     write("> "),
@@ -235,7 +246,5 @@ put_navio(Tab_In, [], Tab_In).
 put_navio(Tab_In, [(X,Y)|Tail], Tab_Out) :-
     atualiza_espaco(Tab_In, (X,Y), 1, New_Tab),
     put_navio(New_Tab, Tail, Tab_Out), !.
-
-
 
 :- menu.
